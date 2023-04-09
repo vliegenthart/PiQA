@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "constraints": {
+    "python": "3.11"
+  },
+  "python": {
+    "fileMatch": [
+      "requirements.txt",
+      "requirements-test.txt",
+      "tests/requirements-test.txt",
+      "requirements-dev.txt"
+    ],
+    "enabled": true
+  },
+  "enabledManagers": [
+    "pip_requirements"
+  ],
+  "pip_requirements": {
+    "fileMatch": [
+      "requirements.txt",
+      "requirements-test.txt",
+      "requirements-dev.txt"
+    ],
+    "enabled": true
+  },
+  "groupName": "all",
+  "semanticCommits": "enabled",
+  "baseBranches": [
+    "master"
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/__fixtures__/**"
+  ]
+}
