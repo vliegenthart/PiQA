@@ -8,15 +8,14 @@
 # OF ANY KIND, either express or implied. See the License for the specific language
 # governing permissions and limitations under the License.
 
-from io import BytesIO
-import logging
-import os
 from glob import glob
 import shutil
 import time
 import zipfile
 import json
 from typing import List, Optional, Dict,  Any
+from pdfrw import PdfReader, PdfWriter
+import os
 
 from adobe.pdfservices.operation.auth.credentials import Credentials
 from adobe.pdfservices.operation.exception.exceptions import (
@@ -36,11 +35,11 @@ from adobe.pdfservices.operation.pdfops.options.extractpdf.extract_renditions_el
 from adobe.pdfservices.operation.execution_context import ExecutionContext
 from adobe.pdfservices.operation.io.file_ref import FileRef
 from adobe.pdfservices.operation.pdfops.extract_pdf_operation import ExtractPDFOperation
-from pdfrw import PdfReader, PdfWriter
 
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
-TMP_PATH = "data/tmp"
+from piqa.config import logging
+
+TMP_PATH = 'data/tmp'
 
 def _update_bounds(element: Dict[str, Any], page_sizes: List[Dict[str, int]], dpi: int) -> None:
     """Update bounds in the given element.
@@ -138,7 +137,9 @@ def process_pdf(input_file_path: str, max_number_pages: int = 1, tail: bool = Fa
     if existing_files:
         logging.info("Not calling Adobe SDK, file already processed")
         shutil.rmtree(TMP_PATH)
-        return None
+
+        with open(existing_files[0]) as json_file:
+            return json.load(json_file)
 
     page_sizes = _preprocess_pdf(input_file_path, output_file_path, file_name, max_number_pages, tail)
 
@@ -227,13 +228,10 @@ def process_pdf(input_file_path: str, max_number_pages: int = 1, tail: bool = Fa
 
         shutil.rmtree(TMP_PATH)
 
+        logging.info(f"[{round(time.perf_counter() - start_time, 2)}s] Finished processing PDF with adobe")
+
+        return json_data
+
     except (ServiceApiException, ServiceUsageException, SdkException):
         logging.exception("Exception encountered while executing operation")
         shutil.rmtree(TMP_PATH)
-
-if __name__ == "__main__":
-    log_level = os.environ.get("LOGLEVEL", "INFO")
-    logging.basicConfig(level=log_level)
-
-    file_path = "data/documents/buffer.pdf"
-    process_pdf(file_path, max_number_pages=5, tail=False)

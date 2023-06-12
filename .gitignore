@@ -133,3 +133,6 @@ dmypy.json
 **/data/*
 !src/adobe_utils/data/documents/*
 **/adobe_utils/config
+tempCodeRunner*
+**/.*env*
+**/venv*

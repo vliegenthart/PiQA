@@ -7,3 +7,7 @@ Pitchdeck Question and Answer app built with the latest LLMs and LangChain
 1. Go to https://developer.adobe.com/document-services/apis/pdf-extract/ and follow the steps to Get Credentials
 2. Copy the `pdfservices-api-credentials.json` and `private.key` files to the `src/adobe_utils/config` folder
 3. Install DEPS TODO
+
+## Output
+
+ADD EXAMPLE OUTPUT

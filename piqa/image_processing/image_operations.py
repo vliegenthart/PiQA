@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from typing import Tuple, List
 
+from piqa.config import logging
 
 def detect_paragraphs(image_path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray, List[Tuple[int, int, int, int]]]:
     """
@@ -30,14 +31,14 @@ def detect_paragraphs(image_path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarr
     dilate = cv2.dilate(thresh, kernel, iterations=12)
 
     # Find contours and draw rectangle
-    cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    contours = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours = contours[0] if len(contours) == 2 else contours[1]
 
     rectangles = []
-    for c in cnts:
-        x, y, w, h = cv2.boundingRect(c)
-        cv2.rectangle(image, (x, y), (x + w, y + h), (36, 255, 12), 2)
-        rectangles.append((x, y, w, h))
+    for contour in contours:
+        x, y, width, height = cv2.boundingRect(contour)
+        cv2.rectangle(image, (x, y), (x + width, y + height), (36, 255, 12), 2)
+        rectangles.append((x, y, width, height))
 
     cv2.imshow('thresh', thresh)
     cv2.imshow('dilate', dilate)
@@ -46,10 +47,6 @@ def detect_paragraphs(image_path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarr
 
     return thresh, dilate, image, rectangles
 
-
-if __name__ == "__main__":
-    for i in range(4):
-        detect_paragraphs(f'data/images/test_{i}.png')
 
 # How to read the text:
 # 1. Take bounding boxes above
