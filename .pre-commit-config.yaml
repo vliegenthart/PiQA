@@ -35,12 +35,4 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
-        exclude: tests/serverless_architecture/functions/api
-  - repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.74.1 # The version of cfn-lint to use
-    hooks:
-      - id: cfn-python-lint
-        files: 'serverless_architecture/.*template\.yaml'
-        exclude: "serverless_architecture/containers/ops/batch-jobs/template.yaml"
-        args:
-          - --ignore-checks=W3002,W3005
+        exclude: tests/

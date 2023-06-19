@@ -131,9 +131,9 @@ dmypy.json
 
 # CUSTOM
 **/data/*
-!src/adobe_utils/data/documents/*
-**/adobe_utils/config
+**/credentials/*
 tempCodeRunner*
 **/.*env*
 **/venv*
 .vscode
+tests/**/*.png

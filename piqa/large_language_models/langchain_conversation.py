@@ -13,14 +13,15 @@ from langchain.schema import (
 
 # from langchain.chains import ConversationChain
 # from langchain.memory import ConversationBufferMemory
-from dotenv import load_dotenv
 import os
 import pandas as pd
 
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-chat = ChatOpenAI(temperature=0, openai_api_key=OPENAI_API_KEY, model='gpt-3.5-turbo')
+from piqa.config import logging
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+chat = ChatOpenAI(temperature=0, openai_api_key=OPENAI_API_KEY, model=OPENAI_MODEL) # type: ignore
 # conversation = ConversationChain(
 #     llm=llm,
 #     verbose=True,
@@ -30,7 +31,7 @@ chat = ChatOpenAI(temperature=0, openai_api_key=OPENAI_API_KEY, model='gpt-3.5-t
 
 # TODO: Add chat interactions + history
 def get_chat_completion(df: pd.DataFrame) -> str:
-    print("Generating completion...")
+    logging.info("Generating completion...")
     pdf_content = ' '.join(df['Text'])
 
     instruction_template="{instruction}"
@@ -54,7 +55,7 @@ def get_chat_completion(df: pd.DataFrame) -> str:
 
     chat_prompt = ChatPromptTemplate.from_messages([instruction_human_prompt, task_human_prompt])
 
-    print("PROMPT", chat_prompt.format_prompt(instruction=instruction, pdf_content=pdf_content).to_string())
+    logging.debug(f"PROMPT: {chat_prompt.format_prompt(instruction=instruction, pdf_content=pdf_content).to_string()}")
     resp = chat(chat_prompt.format_prompt(instruction=instruction, pdf_content=pdf_content).to_messages())
     return resp.dict()["content"]
 

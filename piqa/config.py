@@ -1,5 +1,6 @@
 import os
 import logging
 
-log_level = os.environ.get("LOGLEVEL", "INFO")
-logging.basicConfig(level=log_level)
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+logging.basicConfig(level=LOG_LEVEL)
+ENV = os.getenv("ENV", "dev")

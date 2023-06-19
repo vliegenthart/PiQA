@@ -1,10 +1,10 @@
 from pdf2image import convert_from_path
-from typing import NoReturn
+from typing import List
 from PIL import Image
 import os
 
 
-def convert_pdf_to_images(path: str) -> int:
+def convert_pdf_to_images(path: str) -> List[str]:
     """
     Converts each page of a PDF file into separate images and saves them.
 

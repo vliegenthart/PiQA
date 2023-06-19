@@ -1,45 +1,70 @@
+import os
+from dotenv import load_dotenv
+from typing import Optional, Union
 
-from .document_processing import process_pdf, convert_pdf_to_images, flatten_and_preprocess_adobe_json
+from .config import logging
+from .document_processing import (process_pdf,
+                                  convert_pdf_to_images,
+                                  flatten_and_preprocess_adobe_json)
 from .image_processing import detect_paragraphs
 from .large_language_models import get_chat_completion
 
-
-
-from .utils import relative_path
-from .config import logging
+load_dotenv()
 
 class PiQaClient:
-    def __init__(self, pdf_path):
-        self.pdf_path = pdf_path
+    """Client to handle Pitch Deck operations.
 
-    def generate_pitchdeck_metrics(self, max_number_pages=5, tail=False):
+    Args:
+        max_number_pages (int, optional): Maximum number of pages. Defaults to 5.
+        tail (bool, optional): Tail option for page processing. Defaults to False.
 
-        # TODO: Parallelize this
-        # Processing the PDF
-        adobe_json_data = process_pdf(self.pdf_path, max_number_pages, tail)
+    Attributes:
+        max_number_pages (int): Maximum number of pages.
+        tail (bool): Tail option for page processing.
+    """
+    def __init__(self, max_number_pages: int = 5, tail: bool = False):
+        self.max_number_pages = max_number_pages
+        self.tail = tail
 
-        df = flatten_and_preprocess_adobe_json(adobe_json_data)
+    def generate_pitchdeck_metrics(self, file_path: str) -> Union[str, dict]:
+        """Generate pitch deck metrics.
 
-        result = get_chat_completion(df)
-        print(result)
-        # Optional Enhancements
-        # # Generate images from PDF
-        # page_image_paths = convert_pdf_to_images(self.pdf_path)
+        Args:
+            file_path (str): Path to the input file.
 
-        # # Detecting paragraphs
-        # for page_image_path in page_image_paths:
-        #     detect_paragraphs(page_image_path)
+        Returns:
+            Union[str, dict]: Metrics result or error message.
+        """
+        try:
+            adobe_json_data = process_pdf(file_path, self.max_number_pages, self.tail)
 
+            if not adobe_json_data:
+                return "No data extracted"
 
+            df = flatten_and_preprocess_adobe_json(adobe_json_data)
+            completion_result = get_chat_completion(df)
 
-# from document_processing import process_pdf
+            return completion_result
 
+        except Exception as e:
+            logging.error(f"Error generating pitch deck metrics: {e}")
+            return "Error generating pitch deck metrics"
 
-# file_paths = glob(os.path.splitext(folder_path)[0] + "*.pdf")
+    def _optional_enhancements(self, file_path: str) -> Optional[str]:
+        """Optional enhancements like image conversion and paragraph detection.
 
-# print(f"Processing {len(file_paths)} PDFs, with max number of pages each of {max_number_pages}")
+        Args:
+            file_path (str): Path to the input file.
 
-# for path in file_paths:
-#     process_pdf(...)
+        Returns:
+            Optional[str]: Error message, if any.
+        """
+        try:
+            page_image_paths = convert_pdf_to_images(file_path)
 
+            for page_image_path in page_image_paths:
+                detect_paragraphs(page_image_path)
 
+        except Exception as e:
+            logging.error(f"Error in optional enhancements: {e}")
+            return "Error in optional enhancements"

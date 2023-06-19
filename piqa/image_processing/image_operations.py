@@ -2,8 +2,7 @@ import cv2
 import numpy as np
 from typing import Tuple, List
 
-from piqa.config import logging
-
+from piqa.config import logging, ENV
 def detect_paragraphs(image_path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray, List[Tuple[int, int, int, int]]]:
     """
     Detect paragraphs in a text document image and draw bounding rectangles around them.
@@ -40,10 +39,11 @@ def detect_paragraphs(image_path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarr
         cv2.rectangle(image, (x, y), (x + width, y + height), (36, 255, 12), 2)
         rectangles.append((x, y, width, height))
 
-    cv2.imshow('thresh', thresh)
-    cv2.imshow('dilate', dilate)
-    cv2.imshow('image', image)
-    cv2.waitKey()
+    if ENV == "debug":
+        cv2.imshow('thresh', thresh)
+        cv2.imshow('dilate', dilate)
+        cv2.imshow('image', image)
+        cv2.waitKey()
 
     return thresh, dilate, image, rectangles
 
