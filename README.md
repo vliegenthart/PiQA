@@ -9,7 +9,7 @@ Pitchdeck key information extractor using the latest LLMs and LangChain
 To ensure this package can be run on any machine that supports Python, the following steps should be followed:
 
 1. Create a virtual env. One way to do so is with; `python -m venv venv-piqa`
-2. Activate the virtual env; `active venv-piqa/bin/activate`
+2. Activate the virtual env; `source venv-piqa/bin/activate`
 3. Install the required depencies; `pip install -r requirements.txt`
 4. (Optional) If you'd also like to run the tests locally; `pip install -r requirements-test.txt`
 
