@@ -15,7 +15,7 @@ def pytest_sessionstart(session):
 
 
     _reset_folder(TMP_PATH)
-    os.makedirs(TMP_PATH, exist_ok=True)
+    _reset_folder("tests/data/images")
 
     generate_test_images()
 
@@ -25,8 +25,8 @@ def pytest_sessionfinish(session, exitstatus):
     returning the exit status to the system.
     """
 
-    # _reset_folder(TMP_PATH)
-    # _reset_folder("tests/data/images")
+    _reset_folder(TMP_PATH)
+    _reset_folder("tests/data/images")
 
 def _reset_folder(path):
     if os.path.exists(path):
