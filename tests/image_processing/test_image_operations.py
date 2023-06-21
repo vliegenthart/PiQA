@@ -10,9 +10,10 @@ def create_test_image(text: str, width: int, height: int, font_size: int, filena
     font = ImageFont.load_default()
     draw = ImageDraw.Draw(image)
     draw.text((10, 10), text, font=font, fill=(0, 0, 0))
-    image.save(f"data/images/{filename}")
+    image.save(f"tests/data/images/{filename}")
 
 def generate_test_images() -> None:
+    print("CREATING TEST IMAGES")
     text_single_paragraph = "This is a single paragraph. It has multiple lines and sentences, but it is still a single paragraph."
     text_two_paragraphs = "This is the first paragraph.\n\nThis is the second paragraph."
     text_paragraphs_with_space = "Paragraph 1\n\nParagraph 2\n\nParagraph 3"

@@ -1,11 +1,22 @@
+import os
+import shutil
+
 from image_processing.test_image_operations import generate_test_images
 
+TMP_PATH = 'tests/data/tmp'
 
 def pytest_sessionstart(session):
     """
     Called after the Session object has been created and
     before performing collection and entering the run test loop.
     """
+
+    # Reset temporary folder to save outputs from test run
+
+
+    _reset_folder(TMP_PATH)
+    os.makedirs(TMP_PATH, exist_ok=True)
+
     generate_test_images()
 
 def pytest_sessionfinish(session, exitstatus):
@@ -14,6 +25,13 @@ def pytest_sessionfinish(session, exitstatus):
     returning the exit status to the system.
     """
 
-    # TODO:
-    # Cleanup generated images
+    # _reset_folder(TMP_PATH)
+    # _reset_folder("tests/data/images")
+
+def _reset_folder(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+
+    os.makedirs(path, exist_ok=True)
+
 

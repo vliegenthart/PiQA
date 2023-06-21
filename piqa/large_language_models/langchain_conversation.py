@@ -11,6 +11,7 @@ from langchain.prompts.chat import (
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+
 chat = ChatOpenAI(temperature=0, openai_api_key=OPENAI_API_KEY, model=OPENAI_MODEL) # type: ignore
 
 

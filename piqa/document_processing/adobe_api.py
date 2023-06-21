@@ -95,7 +95,7 @@ def _preprocess_pdf(input_file_path: str, output_file_path: str, max_number_page
     return page_sizes
 
 
-def _call_adobe_service(file_path: str):
+def _call_adobe_service(file_path: str) -> FileRef:
     credentials = (
         Credentials.service_account_credentials_builder()
             .from_file("credentials/pdfservices-api-credentials.json")
@@ -131,7 +131,7 @@ def _call_adobe_service(file_path: str):
     return result
 
 
-def _extract_data_from_result(result, op_zip_file_path: str) -> Optional[Dict[str, Any]]:
+def _extract_data_from_result(result: FileRef, op_zip_file_path: str) -> Optional[Dict[str, Any]]:
     if os.path.exists(op_zip_file_path):
         os.remove(op_zip_file_path)
 
@@ -148,6 +148,9 @@ def _extract_data_from_result(result, op_zip_file_path: str) -> Optional[Dict[st
                 break
 
     logging.debug("Saved zip file to {op_zip_file_path}")
+
+    with open(op_zip_file_path.replace(".zip", ".json"), "w+") as f:
+        f.write(json.dumps(json_data))
 
     return json_data
 
